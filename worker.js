@@ -55,21 +55,27 @@ function test(ctx, cb) {
 function deploy(ctx, cb) {
   // If Heroku, run in Gitane context which sets up SSH keys
   if (ctx.jobData.deploy_config) {
+    var app = ctx.jobData.deploy_config.app
+    var key = ctx.jobData.deploy_config.privkey
     getJson(
       path.join(ctx.workingDir, STRIDER_CUSTOM_JSON),
       function(err, json) {
+        if (err) {
+          ctx.striderMessage("Failed to parse " + STRIDER_CUSTOM_JSON)
+          return cb(0)
+        }
         // No command found - continue
         if (!json.deploy) {
           return cb(0)
         }
         var cmd = 'git remote add heroku git@heroku.com:' + app + '.git'
-        gitane.run(cwd, key, cmd, function(err, stdout, stderr) {
+        gitane.run(ctx.workingDir, key, cmd, function(err, stdout, stderr) {
           if (err) return cb(1, null)
           ctx.updateStatus("queue.job_update", {stdout:stdout, stderr:stderr, stdmerged:stdout+stderr})
-          gitane.run(cwd, key, json.deploy, function(err, stdout, stderr) {
+          gitane.run(ctx.workingDir, key, json.deploy, function(err, stdout, stderr) {
             if (err) return cb(1, null)
             ctx.updateStatus("queue.job_update", {stdout:stdout, stderr:stderr, stdmerged:stdout+stderr})
-            striderMessage("Deployment to Heroku successful.")
+            ctx.striderMessage("Deployment to Heroku successful.")
             cb(0)
           })
         })
