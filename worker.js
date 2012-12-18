@@ -33,7 +33,7 @@ function customCmd(cmd, ctx, cb) {
             + json[cmd] + "` failed with exit code " + exitCode)
           return cb(exitCode)
         }
-        ctx.striderMessage("Custom " + cmd + " command `
+        ctx.striderMessage("Custom " + cmd + " command `"
             + json[cmd] + "` completed successfully")
         return cb(0)
       })
