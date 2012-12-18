@@ -80,7 +80,7 @@ function deploy(ctx, cb) {
 module.exports = function(ctx, cb) {
 
   ctx.addDetectionRule({
-    filename:STRIDER_CUSTOM_JSON
+    filename:STRIDER_CUSTOM_JSON,
     language:"custom",
     framework:null,
   })
