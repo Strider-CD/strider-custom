@@ -21,6 +21,10 @@ function customCmd(cmd, ctx, cb) {
   getJson(
     path.join(ctx.workingDir, STRIDER_CUSTOM_JSON),
     function(err, json) {
+      if (err) {
+        ctx.striderMessage("Failed to parse " + STRIDER_CUSTOM_JSON)
+        return cb(0)
+      }
       // No command found - continue
       if (!json[cmd]) {
         return cb(0)
@@ -83,6 +87,10 @@ module.exports = function(ctx, cb) {
     filename:STRIDER_CUSTOM_JSON,
     language:"custom",
     framework:null,
+    exists:true,
+    prepare:prepare,
+    test:test,
+    deploy:deploy,
   })
 
 
