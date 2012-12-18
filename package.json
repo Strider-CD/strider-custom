@@ -1,0 +1,23 @@
+{
+  "name": "strider-custom",
+  "version": "0.1.0",
+  "description": "Support for custom prepare, test and deploy phases in Strider",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Strider-CD/strider-custom.git"
+  },
+  "keywords": [
+    "strider"
+  ],
+  "author": "Niall O'Higgins",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "libyaml": "~0.2.1",
+    "gitane": "~0.2.11"
+  }
+}
