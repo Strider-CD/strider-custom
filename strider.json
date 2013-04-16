@@ -1,4 +1,5 @@
 {
   "worker":"worker.js",
-  "weight":"-2"
+  "webapp":"webapp.js",
+  "weight":"-10"
 }

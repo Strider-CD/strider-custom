@@ -17,6 +17,20 @@ function getJson(filename, cb) {
   })
 }
 
+var runCmd = function(ctx, phase, cmd, cb){
+  var sh = ctx.shellWrap(cmd)
+  ctx.forkProc(ctx.workingDir, sh.cmd, sh.args, function(exitCode) {
+    if (exitCode !== 0) {
+      ctx.striderMessage("Custom " + phase + " command `"
+        + cmd + "` failed with exit code " + exitCode)
+      return cb(exitCode)
+    }
+
+    return cb(0)
+  })
+}
+
+
 function customCmd(cmd, ctx, cb) {
   getJson(
     path.join(ctx.workingDir, STRIDER_CUSTOM_JSON),
@@ -29,18 +43,8 @@ function customCmd(cmd, ctx, cb) {
       if (!json[cmd]) {
         return cb(0)
       }
-      // Run command
-      var sh = ctx.shellWrap(json[cmd])
-      ctx.forkProc(ctx.workingDir, sh.cmd, sh.args, function(exitCode) {
-        if (exitCode !== 0) {
-          ctx.striderMessage("Custom " + cmd + " command `"
-            + json[cmd] + "` failed with exit code " + exitCode)
-          return cb(exitCode)
-        }
-        ctx.striderMessage("Custom " + cmd + " command `"
-            + json[cmd] + "` completed successfully")
-        return cb(0)
-      })
+
+      runCmd(ctx, cmd, json[cmd], cb);
   })
 }
 
@@ -86,6 +90,16 @@ function deploy(ctx, cb) {
   customCmd("deploy", ctx, cb)
 }
 
+var genCustomScript = function(phase){
+  return function(ctx, cb){
+    var rconf = ctx.jobData.repo_config
+    if (rconf.custom && rconf.custom[phase]){
+      runCmd(ctx, phase, rconf.custom[phase], cb)
+    } else {
+      cb(null);
+    }
+  }
+}
 
 module.exports = function(ctx, cb) {
 
@@ -98,6 +112,15 @@ module.exports = function(ctx, cb) {
     test:test,
     deploy:deploy,
   })
+
+
+  ctx.addBuildHook({
+      prepare: genCustomScript('prepare')
+    , test: genCustomScript('test')
+    , deploy: genCustomScript('deploy')
+    , cleanup: genCustomScript('cleanup')
+  })
+
 
 
   console.log("strider-custom worker extension loaded")
