@@ -96,7 +96,7 @@ var genCustomScript = function(phase){
     if (rconf.custom && rconf.custom[phase]){
       runCmd(ctx, phase, rconf.custom[phase], cb)
     } else {
-      cb(null);
+      cb(0);
     }
   }
 }
