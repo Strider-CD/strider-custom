@@ -1,6 +1,6 @@
 {
   "name": "strider-custom",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Support for custom prepare, test and deploy phases in Strider",
   "main": "index.js",
   "scripts": {
