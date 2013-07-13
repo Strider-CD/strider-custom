@@ -41,7 +41,7 @@
   </div>
   
   <div class='savecode affix' data-spy="affix" data-offset-top="20">
-    <a id = "savecodebtn" href = "javascript://" class='btn btn-primary btn-large'>Save</a>
+    <a id = "savecodebtn" data-title='saved!' href = "javascript://" class='btn btn-primary btn-large'>Save</a>
   </div>
   <script>
  
@@ -68,10 +68,13 @@ $(function(){
 
     $.post('/custom/script', {url:repo, scripts:out}, function(res){
       if(res.errors) throw res.errors;
-      alert("Saved!")
+      $('#savecodebtn').tooltip('show');
+      setTimeout(function () {
+        $('#savecodebtn').tooltip('hide');
+      }, 500);
     })
 
-  })  
+  }).tooltip({trigger:'manual'}) 
 })
 
   </script>
