@@ -15,6 +15,19 @@ function loadConfig(filename, cb) {
   }
 }
 
+var runScript = function(ctx, phase, script, cb) {
+  if (typeof(script) === 'string') {
+    return runCmd(ctx, phase, script, cb);
+  }
+  // assume it's a list of shell commands
+  var next = function (i) {
+    runCmd(ctx, phase, script[i], function (exitCode) {
+      if (exitCode !== 0 || i + 1 >= script.length) return cb(exitCode);
+      next(i + 1);
+    });
+  };
+  next(0);
+};
 
 var runCmd = function(ctx, phase, cmd, cb){
   var sh = ctx.shellWrap(cmd)
@@ -71,8 +84,8 @@ function getCustom(attr, ctx, next) {
 }
 
 function customCmd(phase, ctx, cb) {
-  getCustom(phase, ctx, function (err, cmd) {
-    runCmd(ctx, phase, cmd, cb);
+  getCustom(phase, ctx, function (err, script) {
+    runScript(ctx, phase, script, cb);
   });
 }
 
@@ -113,7 +126,7 @@ var genCustomScript = function(phase){
   return function(ctx, cb){
     var rconf = ctx.jobData.repo_config
     if (rconf.custom && rconf.custom[phase]){
-      runCmd(ctx, phase, rconf.custom[phase], cb)
+      runScript(ctx, phase, rconf.custom[phase], cb)
     } else {
       cb(0);
     }
