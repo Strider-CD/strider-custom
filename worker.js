@@ -2,20 +2,19 @@ var fs = require('fs')
 var gitane = require('gitane')
 var path = require('path')
 
-var STRIDER_CUSTOM_JSON = "strider-custom.json"
+require('js-yaml');
+var STRIDER_CUSTOM_FILES = ['.strider.yml', '.strider.json', 'strider-custom.yml', 'strider-custom.json'];
+var STRIDER_CUSTOM_GLOB = '{.strider,strider-custom}.{json,yml}';
 
-// Read & parse a JSON file
-function getJson(filename, cb) {
-  fs.readFile(filename, function(err, data) {
-    if (err) return cb(err, null)
-    try {
-      var json = JSON.parse(data)
-      cb(null, json)
-    } catch(e) {
-      cb(e, null)
-    }
-  })
+// Read & parse a config file
+function loadConfig(filename, cb) {
+  try {
+    cb(null, require(filename));
+  } catch (e) {
+    cb(e, null);
+  }
 }
+
 
 var runCmd = function(ctx, phase, cmd, cb){
   var sh = ctx.shellWrap(cmd)
@@ -26,27 +25,55 @@ var runCmd = function(ctx, phase, cmd, cb){
         + cmd + "` failed with exit code " + exitCode)
       return cb(exitCode)
     }
-
     return cb(0)
   })
 }
 
+function findConfig(workingDir, cb) {
+  var parseError = true;
+  next(0);
+  function next(i) {
+    if (i >= STRIDER_CUSTOM_FILES.length) {
+      return cb(parseError);
+    }
+    var fpath = path.join(workingDir, STRIDER_CUSTOM_FILES[i]);
+    fs.stat(fpath, function (err, res) {
+      if (err) return next(i+1);
+      loadConfig(fpath, function (err, config) {
+        if (err) {
+          parseError = fpath;
+          return next(i+1);
+        }
+        return cb(null, config);
+      });
+    });
+  }
+}
 
-function customCmd(cmd, ctx, cb) {
-  getJson(
-    path.join(ctx.workingDir, STRIDER_CUSTOM_JSON),
-    function(err, json) {
+function getCustom(attr, ctx, next) {
+  if (ctx.customConfig === false) return next(true);
+  if (!ctx.customConfig) {
+    return findConfig(ctx.workingDir, function (err, config) {
       if (err) {
-        ctx.striderMessage("Failed to parse " + STRIDER_CUSTOM_JSON)
-        return cb(0)
+        ctx.customConfig = false;
+        if (err !== true) {
+          ctx.striderMessage("Failed to parse " + err);
+        }
+        return next(true);
       }
-      // No command found - continue
-      if (!json[cmd]) {
-        return cb(0)
-      }
+      ctx.customConfig = config;
+      if (typeof(config[attr])==='undefined') return next(true);
+      return next(null, config[attr]);
+    });
+  }
+  if (typeof(ctx.customConfig[attr]) === 'undefined') return next(true);
+  next(null, ctx.customConfig[attr]);
+}
 
-      runCmd(ctx, cmd, json[cmd], cb);
-  })
+function customCmd(phase, ctx, cb) {
+  getCustom(phase, ctx, function (err, cmd) {
+    runCmd(ctx, phase, cmd, cb);
+  });
 }
 
 function prepare(ctx, cb) {
@@ -62,28 +89,19 @@ function deploy(ctx, cb) {
   if (ctx.jobData.deploy_config) {
     var app = ctx.jobData.deploy_config.app
     var key = ctx.jobData.deploy_config.privkey
-    getJson(
-      path.join(ctx.workingDir, STRIDER_CUSTOM_JSON),
-      function(err, json) {
-        if (err) {
-          ctx.striderMessage("Failed to parse " + STRIDER_CUSTOM_JSON)
-          return cb(0)
-        }
-        // No command found - continue
-        if (!json.deploy) {
-          return cb(0)
-        }
-        var cmd = 'git remote add heroku git@heroku.com:' + app + '.git'
-        gitane.run(ctx.workingDir, key, cmd, function(err, stdout, stderr) {
+    getCustom('deploy', ctx, function (err, script) {
+      if (err) return cb(0);
+      var cmd = 'git remote add heroku git@heroku.com:' + app + '.git'
+      gitane.run(ctx.workingDir, key, cmd, function(err, stdout, stderr) {
+        if (err) return cb(1, null)
+        ctx.updateStatus("queue.job_update", {stdout:stdout, stderr:stderr, stdmerged:stdout+stderr})
+        gitane.run(ctx.workingDir, key, script, function(err, stdout, stderr) {
           if (err) return cb(1, null)
           ctx.updateStatus("queue.job_update", {stdout:stdout, stderr:stderr, stdmerged:stdout+stderr})
-          gitane.run(ctx.workingDir, key, json.deploy, function(err, stdout, stderr) {
-            if (err) return cb(1, null)
-            ctx.updateStatus("queue.job_update", {stdout:stdout, stderr:stderr, stdmerged:stdout+stderr})
-            ctx.striderMessage("Deployment to Heroku successful.")
-            cb(0)
-          })
+          ctx.striderMessage("Deployment to Heroku successful.")
+          cb(0)
         })
+      })
     })
     return
   }  
@@ -105,7 +123,7 @@ var genCustomScript = function(phase){
 module.exports = function(ctx, cb) {
 
   ctx.addDetectionRule({
-    filename:STRIDER_CUSTOM_JSON,
+    filename:STRIDER_CUSTOM_GLOB,
     language:"custom",
     framework:null,
     exists:true,
@@ -114,15 +132,12 @@ module.exports = function(ctx, cb) {
     deploy:deploy,
   })
 
-
   ctx.addBuildHook({
       prepare: genCustomScript('prepare')
     , test: genCustomScript('test')
     , deploy: genCustomScript('deploy')
     , cleanup: genCustomScript('cleanup')
   })
-
-
 
   console.log("strider-custom worker extension loaded")
 
