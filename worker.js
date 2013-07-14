@@ -156,3 +156,4 @@ module.exports = function(ctx, cb) {
 
   cb(null, null)
 }
+module.exports.runScript = runScript;
