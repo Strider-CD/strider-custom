@@ -1,35 +1,37 @@
-function CustomCtrl() {
-}
 
-$(function(){
-  var repo = $("html").data().controllerParams.repo_url; // EWW!
+app.controller('CustomCtrl', ['$scope', function ($scope) {
 
-  $.getJSON("/custom/script", {url: repo}, function(res){
-    $.each(['prepare', 'test', 'deploy', 'cleanup'], function(){
-      var phase = this + ''
-      $("#" + phase).val(res.results[phase] || '');
-    })
+  function save(url, scripts, done) {
+    $.ajax({
+      url: '/custom/script',
+      type: 'POST',
+      data: {url: url, scripts: scripts},
+      dataType: 'json',
+      success: function (data, ts, xhr) {
+        done(null);
+      },
+      error: function (xhr, ts, e) {
+        if (xhr && xhr.responseText) {
+          var data = $.parseJSON(xhr.responseText);
+          e = data.errors[0];
+        }
+        done(e);
+      }
+    });
+  }
 
-      })
+  $scope.scripts = $scope.panelData.custom;
+  $scope.save = function () {
+    $scope.saving = true;
+    save($scope.repo.url, $scope.scripts, function (err) {
+      $scope.saving = false;
+      if (err) {
+        $scope.error(err);
+      } else {
+        $scope.success('Saved custom scripts');
+      }
+      $scope.$root.$digest();
+    });
+  };
 
-
-  $("#savecodebtn").click(function(){
-    var out = {}
-
-    $.each(['prepare', 'test', 'deploy', 'cleanup'], function(){
-      var phase = this + ''
-      , code = $("#" + phase).val();
-      out[phase] = code;
-    })
-
-      $.post('/custom/script', {url:repo, scripts:out}, function(res){
-        if(res.errors) throw res.errors;
-        $('#savecodebtn').tooltip('show');
-        setTimeout(function () {
-          $('#savecodebtn').tooltip('hide');
-        }, 500);
-      })
-
-  }).tooltip({trigger:'manual'}) 
-})
-
+}]);

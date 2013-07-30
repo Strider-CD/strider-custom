@@ -19,9 +19,8 @@ function getJson(filename, cb) {
 
 var runCmd = function(ctx, phase, cmd, cb){
   var sh = ctx.shellWrap(cmd)
-  ctx.striderMessage("$ " + cmd);
   ctx.forkProc(ctx.workingDir, sh.cmd, sh.args, function(exitCode) {
-    if (exitCode !== 0) {
+    if (exitCode) {
       ctx.striderMessage("Custom " + phase + " command `"
         + cmd + "` failed with exit code " + exitCode)
       return cb(exitCode)
