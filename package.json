@@ -2,7 +2,7 @@
   "name": "strider-custom",
   "version": "0.2.1",
   "description": "Support for custom prepare, test and deploy phases in Strider",
-  "main": "index.js",
+  "main": "worker.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +17,7 @@
   "license": "BSD",
   "readmeFilename": "README.md",
   "dependencies": {
-    "libyaml": "~0.2.1",
+    "js-yaml": "~2.1.0",
     "gitane": "~0.2.11"
   }
 }
