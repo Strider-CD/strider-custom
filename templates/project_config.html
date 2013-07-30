@@ -74,7 +74,10 @@ $(function(){
       }, 500);
     })
 
-  }).tooltip({trigger:'manual'}) 
+  });
+  if ($.tooltip) {
+    $('#savecodebtn').tooltip({trigger:'manual'});
+  }
 })
 
   </script>
