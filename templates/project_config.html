@@ -1,85 +1,60 @@
-<div id = "#custom" class="tab-pane widget">
+<div id="#custom" class="tab-pane widget">
+  <!-- TODO: we should expect plugins to serve up their own styles in a separate sheet -->
   <style>
-   .script textarea{
-      height:100px; width:54em; font-family:monospace;
-      background-color:#111; color:#9f9; 
-      padding:1em;
-      resize:vertical;
+    .script textarea {
+      background-color: #111;
+      color: #9f9;
+      font-family: monospace;
+      height: 100px;
+      padding: 1em;
+      resize: vertical;
+      width: 100%;
+
+      -webkit-box-sizing: border-box;
+         -mox-box-sizing: border-box;
+              box-sizing: border-box;
     }
-  .affix{position:fixed; top:180px; right:200px;}
+    .affix {
+      position: fixed;
+      top: 180px;
+      right: 20px;
+    }
+    #custom .wrapper {
+      margin-right: 75px;
+    }
   </style>
-  <div class='span8'>
+  <div class='wrapper'>
     <h2>Set Custom Scripts</h2>
     <hr />
 
-    <div class='well script'>    
+    <div class='well script'>
       <h4>Prepare</h4>
       <p>Setup test/deployment environment, install dependencies etc.</p>
       <p>An exit code other than 0 will fail the tests.</p>
-      <textarea id = "prepare" spellcheck="false" name ='prepare' placeholder ="unix commands"></textarea>
+      <textarea ng-model="scripts.prepare" spellcheck="false" name ='prepare' placeholder ="unix commands"></textarea>
     </div>
 
- 
-    <div class='well script'>    
+    <div class='well script'>
       <h4>Test</h4>
       <p>Run a custom test command. An exit code other than 0 counts as a test failure.</p>
-      <textarea id="test" spellcheck="false" name='test' placeholder ="unix commands"></textarea>
-    </div>    
+      <textarea ng-model="scripts.test" spellcheck="false" name='test' placeholder ="unix commands"></textarea>
+    </div>
 
-    <div class='well script'>    
+    <div class='well script'>
       <h4>Deploy</h4>
       <p>Run a custom deploy script.</p>
-      <textarea id="deploy" spellcheck="false" name = 'deploy' placeholder ="unix commands"></textarea>
+      <textarea ng-model="scripts.deploy" spellcheck="false" name = 'deploy' placeholder ="unix commands"></textarea>
     </div>
-    
-    <div class='well script'>    
+
+    <div class='well script'>
       <h4>Cleanup</h4>
       <p>Clean up after a build. Regardless of previous test results etc, cleanup will
       still be run.</p>
-      <textarea id = "cleanup" spellcheck="false" name = 'cleanup' placeholder ="unix commands"></textarea>
+      <textarea ng-model="scripts.cleanup" spellcheck="false" name = 'cleanup' placeholder ="unix commands"></textarea>
     </div>
   </div>
-  
-  <div class='savecode affix' data-spy="affix" data-offset-top="20">
-    <a id = "savecodebtn" data-title='saved!' href = "javascript://" class='btn btn-primary btn-large'>Save</a>
+
+  <div class="savecode affix" data-spy="affix" data-offset-top="20">
+    <button ng-click="save()" ng-disabled="saving" class="btn btn-primary btn-large">Save</button>
   </div>
-  <script>
- 
-$(function(){
-  var repo = $("html").data().controllerParams.repo_url; // EWW!
-
-  $.getJSON("/custom/script", {url: repo}, function(res){
-    $.each(['prepare', 'test', 'deploy', 'cleanup'], function(){
-      var phase = this + ''
-      $("#" + phase).val(res.results[phase] || '');
-    })
-
-  })
-
-
-  $("#savecodebtn").click(function(){
-    var out = {}
-
-    $.each(['prepare', 'test', 'deploy', 'cleanup'], function(){
-      var phase = this + ''
-        , code = $("#" + phase).val();
-      out[phase] = code;
-    })
-
-    $.post('/custom/script', {url:repo, scripts:out}, function(res){
-      if(res.errors) throw res.errors;
-      $('#savecodebtn').tooltip('show');
-      setTimeout(function () {
-        $('#savecodebtn').tooltip('hide');
-      }, 500);
-    })
-
-  });
-  if ($.tooltip) {
-    $('#savecodebtn').tooltip({trigger:'manual'});
-  }
-})
-
-  </script>
-
 </div>
