@@ -17,7 +17,5 @@
   "license": "BSD",
   "readmeFilename": "README.md",
   "dependencies": {
-    "libyaml": "~0.2.1",
-    "gitane": "~0.2.11"
   }
 }
