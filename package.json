@@ -17,7 +17,16 @@
   "license": "BSD",
   "readmeFilename": "README.md",
   "dependencies": {
-    "libyaml": "~0.2.1",
-    "gitane": "~0.2.11"
+  },
+  "strider" : {
+    "worker":"worker.js",
+    "webapp":"webapp.js",
+    "weight":"-1000",
+    "panel" :{
+      "src": "./templates/project_config.html",
+      "title": "Custom Scripts",
+      "id":"strider-custom"
+    }
   }
+
 }

@@ -102,18 +102,6 @@ var genCustomScript = function(phase){
 }
 
 module.exports = function(ctx, cb) {
-
-  ctx.addDetectionRule({
-    filename:STRIDER_CUSTOM_JSON,
-    language:"custom",
-    framework:null,
-    exists:true,
-    prepare:prepare,
-    test:test,
-    deploy:deploy,
-  })
-
-
   ctx.addBuildHook({
       prepare: genCustomScript('prepare')
     , test: genCustomScript('test')

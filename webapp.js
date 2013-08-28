@@ -106,15 +106,6 @@ module.exports = function(ctx, cb) {
       })
   })
 
-  // Add panel HTML snippet for project config page
-  ctx.registerPanel('project_config', {
-    src: path.join(__dirname, "templates", "project_config.html"),
-    plugin_name: 'strider-custom',
-    title: "Custom Scripts",
-    id:"custom",
-    data: 'custom'
-  })
-
   console.log("strider-custom webapp extension loaded")
   cb(null, null)
 }
