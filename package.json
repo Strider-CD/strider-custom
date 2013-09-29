@@ -20,14 +20,10 @@
     "gitane": "~0.3.1"
   },
   "strider": {
+    "id": "custom",
     "type": "job",
     "worker": "worker.js",
     "webapp": "webapp.js",
-    "weight": "-1000",
-    "panel": {
-      "src": "./templates/project_config.html",
-      "title": "Custom Scripts",
-      "id": "strider-custom"
-    }
+    "config": true
   }
 }
