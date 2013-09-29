@@ -1,0 +1,21 @@
+<h3>Environment</h3>
+<textarea ng-model="config.environment"></textarea>
+<div class="help-text">Environment commands should only be for installing
+    versions of languages and such things that need to come even before the
+    prepare stage.</div>
+<h3>Prepare</h3>
+<textarea ng-model="config.prepare"></textarea>
+<div class="help-text">These commands are run after the repo is cloned but
+    before the tests. Installing dependencies is a good example.</div>
+<h3>Test</h3>
+<textarea ng-model="config.test"></textarea>
+<div class="help-text">If the tests fail, deploy doesn't happen.</div>
+<h3>Deploy</h3>
+<textarea ng-model="config.deploy"></textarea>
+<div class="help-text">Deploy commands are run when you manually trigger a
+    redeploy, or when "deploy_on_green" is on and the job was triggered by a
+    commit.</div>
+<h3>Cleanup</h3>
+<textarea ng-model="config.cleanup"></textarea>
+<div class="help-text">Cleanup always runs.</div>
+<button ng-click="save()" class="btn btn-primary">Save</button>
