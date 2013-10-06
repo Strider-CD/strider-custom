@@ -25,6 +25,7 @@
     "weight": "-1000",
     "panel": {
       "src": "./templates/project_config.html",
+      "controller": "CustomCtrl",
       "title": "Custom Scripts",
       "id": "strider-custom"
     }
