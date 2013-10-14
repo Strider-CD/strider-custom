@@ -2,7 +2,7 @@ function shellCommand(command) {
   if (!command.replace(/#[^\n]*/g, '').trim().length) return
   return {
     command: 'sh',
-    args: ['-c', command]
+    args: ['-x', '-c', command]
   }
 }
 module.exports = {
