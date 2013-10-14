@@ -1,12 +1,19 @@
+function shellCommand(command) {
+  if (!command.replace(/#[^\n]*/g, '').trim().length) return
+  return {
+    command: 'sh',
+    args: ['-c', command]
+  }
+}
 module.exports = {
   init: function (config, context, done) {
     var config = config || {}
     done(null, {
-      environment: config.environment,
-      prepare: config.prepare,
-      test: config.test,
-      deploy: config.deploy,
-      cleanup: config.cleanup
+      environment: shellCommand(config.environment),
+      prepare: shellCommand(config.prepare),
+      test: shellCommand(config.test),
+      deploy: shellCommand(config.deploy),
+      cleanup: shellCommand(config.cleanup)
     })
   }
 }
