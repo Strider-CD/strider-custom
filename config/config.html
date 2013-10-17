@@ -1,3 +1,4 @@
+<button ng-click="save()" class="btn btn-primary">Save</button>
 <h3>Environment</h3>
 <div class="row-fluid">
   <div class="span6">
@@ -48,7 +49,7 @@
   </div>
 </div>
 <h3>Cleanup</h3>
-<div class="row-fluid">
+<div class="row-fluid cleanup">
   <div class="span6">
     <textarea ui-refresh="selectedTab" ui-codemirror="{theme: 'twilight', mode: 'shell', lineNumbers: true}" ng-model="config.cleanup"># put your shell code here</textarea>
   </div>
