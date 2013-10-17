@@ -1,0 +1,62 @@
+<button ng-click="save()" class="btn btn-primary">Save</button>
+<h3>Environment</h3>
+<div class="row-fluid">
+  <div class="span6">
+    <textarea ui-refresh="selectedTab" ui-codemirror="{theme: 'twilight', mode: 'shell', lineNumbers: true}" ng-model="config.environment"># put your shell code here</textarea>
+  </div>
+  <div class="span6">
+    <p class="help-text">
+      Environment commands should only be for installing
+      versions of languages and such things that need to come even before the
+      prepare stage.
+    </p>
+  </div>
+</div>
+<h3>Prepare</h3>
+<div class="row-fluid">
+  <div class="span6">
+    <textarea ui-refresh="selectedTab" ui-codemirror="{theme: 'twilight', mode: 'shell', lineNumbers: true}" ng-model="config.prepare"># put your shell code here</textarea>
+  </div>
+  <div class="span6">
+    <p class="help-text">
+      These commands are run after the repo is cloned but before the
+      tests. Installing dependencies is a good example.
+    </p>
+  </div>
+</div>
+<h3>Test</h3>
+<div class="row-fluid">
+  <div class="span6">
+    <textarea ui-refresh="selectedTab" ui-codemirror="{theme: 'twilight', mode: 'shell', lineNumbers: true}" ng-model="config.test"># put your shell code here</textarea>
+  </div>
+  <div class="span6">
+    <p class="help-text">
+      If the tests fail, deploy doesn't happen.
+    </p>
+  </div>
+</div>
+<h3>Deploy</h3>
+<div class="row-fluid">
+  <div class="span6">
+    <textarea ui-refresh="selectedTab" ui-codemirror="{theme: 'twilight', mode: 'shell', lineNumbers: true}" ng-model="config.deploy"># put your shell code here</textarea>
+  </div>
+  <div class="span6">
+    <p class="help-text">
+      Deploy commands are run when you manually trigger a redeploy, or
+      when "deploy_on_green" is on and the job was triggered by a
+      commit.
+    </p>
+  </div>
+</div>
+<h3>Cleanup</h3>
+<div class="row-fluid cleanup">
+  <div class="span6">
+    <textarea ui-refresh="selectedTab" ui-codemirror="{theme: 'twilight', mode: 'shell', lineNumbers: true}" ng-model="config.cleanup"># put your shell code here</textarea>
+  </div>
+  <div class="span6">
+    <p class="help-text">
+      Cleanup always runs.
+    </p>
+  </div>
+</div>
+<button ng-click="save()" class="btn btn-primary">Save</button>
