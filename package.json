@@ -22,6 +22,7 @@
   "strider": {
     "id": "custom",
     "type": "job",
+    "icon": "icon.png",
     "title": "Custom Scripts",
     "worker": "worker.js",
     "webapp": "webapp.js",
