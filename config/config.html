@@ -35,7 +35,7 @@
 <div class="row-fluid">
   <div class="span12">
     <p class="help-text">
-      If the tests fail, deploy doesn't happen.
+      Note that if the tests fail, deploy doesn't happen.
     </p>
   </div>
 </div>
@@ -51,7 +51,8 @@
     <p class="help-text">
       Deploy commands are run when you manually trigger a redeploy, or
       when "deploy_on_green" is on and the job was triggered by a
-      commit.
+      commit, followed by a successful test run.
+      Deploy commands are not run when tests fail.
     </p>
   </div>
 </div>
