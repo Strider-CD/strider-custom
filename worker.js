@@ -1,5 +1,13 @@
 function shellCommand(command) {
   if (!command || !command.replace(/#[^\n]*/g, '').trim().length) return
+  
+  if (process.platform === 'win32') {
+    return {
+      command: 'cmd',
+      args: ['/c', command]
+    }
+  }
+  
   return {
     command: 'sh',
     args: ['-x', '-c', command]
