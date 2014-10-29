@@ -1,9 +1,8 @@
-#strider-custom
+# strider-custom
 
 Support for custom prepare, test and deploy phases in Strider
 
-
-## Add Scripts within the Strider Configure Pane
+[![NPM](https://nodei.co/npm/strider-custom.png?downloads=true&stars=true)](https://nodei.co/npm/strider-custom/)
 
 
 ## Add a strider-custom.json to your project
