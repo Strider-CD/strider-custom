@@ -26,7 +26,7 @@ function shellCommand(command) {
   }
   
   return {
-    command: 'sh',
-    args: ['-x', '-c', normalizedCommand]
+    command: 'bash',
+    args: ['-e', '-x', '-c', normalizedCommand]
   };
 }
