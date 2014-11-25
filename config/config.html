@@ -3,8 +3,22 @@
 <h2>Custom Scripts</h2>
 <p class="help-text">
   The following scripts execute from inside your project directory.
-  You can use `pwd` or `$PWD` to get the path within your script.
+  In Bash, Powershell, or the POSIX shell, you can use `pwd` or `$PWD` to get the path within your script.
+  In the default Windows shell, you can get the current directory by using `cd` with no arguments.
 </p>
+<h3>Shell</h3>
+<div class="row-fluid">
+  <div class="span12">
+    <p class="help-text">
+      Choose which shell to use to execute your scripts.
+    </p>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="span6">
+    <select ng-model="config.shell" ng-options="value for value in ['Default Shell', 'Bash', 'Powershell']"></select>
+  </div>
+</div>
 <h3>Environment</h3>
 <div class="row-fluid">
   <div class="span12">
