@@ -7,16 +7,16 @@ module.exports = {
     var config = config || {};
     
     done(null, {
-      environment: shellCommand(config.environment, job),
-      prepare: shellCommand(config.prepare, job),
-      test: shellCommand(config.test, job),
-      deploy: shellCommand(config.deploy, job),
-      cleanup: shellCommand(config.cleanup, job)
+      environment: shellCommand(config.environment, config.shell, job),
+      prepare: shellCommand(config.prepare, config.shell, job),
+      test: shellCommand(config.test, config.shell, job),
+      deploy: shellCommand(config.deploy, config.shell, job),
+      cleanup: shellCommand(config.cleanup, config.shell, job)
     });
   }
 };
 
-function shellCommand(command, job) {
+function shellCommand(command, shell, job) {
   if (!command) {
     return;
   }
@@ -29,8 +29,27 @@ function shellCommand(command, job) {
 
   var commandToExecute = compileScript(job, normalizedCommand);
   
+  if ((/bash/i).test(shell)) {  
+    return {
+      command: 'bash',
+      args: ['-e', '-x', '-c', commandToExecute]
+    };
+  }
+  else if ((/powershell/i).test(shell)) {
+    return {
+      command: 'powershell',
+      args: ['-NonInteractive', '-Command', commandToExecute]
+    }
+  }
+  else if (process.platform === 'win32') {
+    return {
+      command: 'cmd',
+      args: ['/c', commandToExecute]
+    }
+  }
+  
   return {
-    command: 'bash',
+    command: 'sh',
     args: ['-e', '-x', '-c', commandToExecute]
   };
 }
