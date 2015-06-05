@@ -1,20 +1,22 @@
 'use strict';
 
+var ejs = require('ejs');
+
 module.exports = {
-  init: function (config, context, done) {
+  init: function (config, job, context, done) {
     var config = config || {};
     
     done(null, {
-      environment: shellCommand(config.environment),
-      prepare: shellCommand(config.prepare),
-      test: shellCommand(config.test),
-      deploy: shellCommand(config.deploy),
-      cleanup: shellCommand(config.cleanup)
+      environment: shellCommand(config.environment, job),
+      prepare: shellCommand(config.prepare, job),
+      test: shellCommand(config.test, job),
+      deploy: shellCommand(config.deploy, job),
+      cleanup: shellCommand(config.cleanup, job)
     });
   }
 };
 
-function shellCommand(command) {
+function shellCommand(command, job) {
   if (!command) {
     return;
   }
@@ -24,9 +26,18 @@ function shellCommand(command) {
   if (!normalizedCommand.length) {
     return;
   }
+
+  var commandToExecute = compileScript(job, normalizedCommand);
   
   return {
     command: 'bash',
-    args: ['-e', '-x', '-c', normalizedCommand]
+    args: ['-e', '-x', '-c', commandToExecute]
   };
 }
+
+var compileScript = function(job, shellScript) {
+  var compiled = ejs.compile(shellScript,'utf-8');
+  var compiledScript = compiled(job);
+
+  return compiledScript;
+};
