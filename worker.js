@@ -21,7 +21,11 @@ function shellCommand(command, shell, job) {
     return;
   }
   
-  var normalizedCommand = command.replace(/#[^\n]*/g, '').trim();
+  var normalizedCommand = command.split('\n').reduce(function (lines, line) {
+    line = line.replace(/^\s*#.*$/, '').trim();
+    if (line.length) lines.push(line);
+    return lines;
+  }, []).join('\n');
   
   if (!normalizedCommand.length) {
     return;
