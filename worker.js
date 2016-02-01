@@ -4,15 +4,20 @@ var ejs = require('ejs');
 
 module.exports = {
   init: function (config, job, context, done) {
-    var config = config || {};
-    
-    done(null, {
-      environment: shellCommand(config.environment, config.shell, job),
-      prepare: shellCommand(config.prepare, config.shell, job),
-      test: shellCommand(config.test, config.shell, job),
-      deploy: shellCommand(config.deploy, config.shell, job),
-      cleanup: shellCommand(config.cleanup, config.shell, job)
-    });
+    try {
+      var config = config || {};
+      var result = {
+        environment: shellCommand(config.environment, config.shell, job),
+        prepare: shellCommand(config.prepare, config.shell, job),
+        test: shellCommand(config.test, config.shell, job),
+        deploy: shellCommand(config.deploy, config.shell, job),
+        cleanup: shellCommand(config.cleanup, config.shell, job)
+      };
+      
+      done(null, result);
+    } catch(e) {
+      done(e);
+    }
   }
 };
 
