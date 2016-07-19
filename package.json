@@ -4,7 +4,7 @@
   "description": "Support for custom prepare, test and deploy phases in Strider",
   "main": "index.js",
   "scripts": {
-    "test": "jshint && mocha -R tap"
+    "test": "eslint *.js && mocha -R tap"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "chai": "~1.8.1",
-    "mocha": "~1.14.0",
-    "jshint": "~2.3.0"
+    "eslint": "^3.1.1",
+    "mocha": "~1.14.0"
   }
 }
