@@ -26,7 +26,9 @@ function shellCommand(command, shell, job) {
     return;
   }
 
-  var normalizedCommand = command.split('\n').reduce(function (lines, line) {
+  var commands = Array.isArray(command) ? command : command.split('\n');
+
+  var normalizedCommand = commands.reduce(function (lines, line) {
     line = line.replace(/^\s*#.*$/, '').trim();
     if (line.length) lines.push(line);
     return lines;
