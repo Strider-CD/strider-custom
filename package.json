@@ -13,8 +13,11 @@
   "keywords": [
     "strider"
   ],
+  "engines": {
+    "node": ">=4.2"
+  },
   "author": "Niall O'Higgins",
-  "license": "BSD",
+  "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
     "ejs": "^1.0.0",
