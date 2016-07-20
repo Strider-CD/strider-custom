@@ -1,5 +1,6 @@
 'use strict';
 
+var debug = require('debug')('strider-custom:worker');
 var ejs = require('ejs');
 
 module.exports = {
@@ -16,6 +17,7 @@ module.exports = {
 
       done(null, result);
     } catch (e) {
+      debug(e);
       done(e);
     }
   }
@@ -39,6 +41,7 @@ function shellCommand(command, shell, job) {
   }
 
   var commandToExecute = compileScript(job, normalizedCommand);
+  debug(commandToExecute);
 
   if ((/bash/i).test(shell)) {
     return {

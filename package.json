@@ -20,6 +20,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
+    "debug": "^2.2.0",
     "ejs": "^1.0.0",
     "gitane": "~0.3.1"
   },
