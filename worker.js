@@ -30,6 +30,13 @@ function shellCommand(command, shell, job) {
 
   var commands = Array.isArray(command) ? command : command.split('\n');
 
+  // Generate individual command descriptions for each given command.
+  if (1 < commands.length) {
+    return commands.map(function (commandLine) {
+      return shellCommand(commandLine, shell, job);
+    });
+  }
+
   var normalizedCommand = commands.reduce(function (lines, line) {
     line = line.replace(/^\s*#.*$/, '').trim();
     if (line.length) lines.push(line);
@@ -41,7 +48,7 @@ function shellCommand(command, shell, job) {
   }
 
   var commandToExecute = compileScript(job, normalizedCommand);
-  debug(commandToExecute);
+  debug('Compiled command', commandToExecute);
 
   if ((/bash/i).test(shell)) {
     return {
