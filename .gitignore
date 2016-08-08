@@ -2,6 +2,10 @@
 .idea/*
 !.idea/codeStyleSettings.xml
 
+# Test coverage
+coverage/
+
+# npm modules
 node_modules/
 
 lib-cov

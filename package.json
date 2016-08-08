@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint *.js",
-    "test": "npm run lint && mocha -R tap"
+    "test": "npm run lint && istanbul cover node_modules/mocha/bin/_mocha -- --recursive"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,8 @@
   "dependencies": {
     "debug": "^2.2.0",
     "ejs": "^1.0.0",
-    "gitane": "~0.3.1"
+    "gitane": "~0.3.1",
+    "istanbul": "^0.4.4"
   },
   "strider": {
     "id": "custom",
