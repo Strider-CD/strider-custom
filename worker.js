@@ -73,7 +73,7 @@ function shellCommand(command, shell, job) {
   if ((/bash/i).test(shell)) {
     return {
       command: 'bash',
-      args: ['-e', '-x', '-c', commandToExecute],
+      args: ['-e', '-c', commandToExecute],
       screen: commands.screen
     };
 
