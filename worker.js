@@ -51,7 +51,7 @@ function shellCommand(command, shell, job) {
   }
 
   // Generate individual command descriptions for each given command, if the input was an array.
-  if (1 < commands.length && Array.isArray(command)) {
+  if (1 <= commands.length && Array.isArray(command)) {
     return commands.map(function (commandLine) {
       return shellCommand(commandLine, shell, job);
     });
